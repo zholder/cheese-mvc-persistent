@@ -1,5 +1,6 @@
 package org.launchcode.controllers;
 
+
 import org.launchcode.models.Category;
 import org.launchcode.models.Cheese;
 import org.launchcode.models.data.CategoryDao;
@@ -15,15 +16,19 @@ import javax.validation.Valid;
 /**
  * Created by LaunchCode
  */
+
 @Controller
 @RequestMapping("cheese")
 public class CheeseController {
+
 
     @Autowired
     private CheeseDao cheeseDao;
 
     @Autowired
     private CategoryDao categoryDao;
+
+
 
     // Request path: /cheese
     @RequestMapping(value = "")
@@ -75,9 +80,11 @@ public class CheeseController {
         return "redirect:";
     }
 
-    @RequestMapping(value="category")
-    public String getCategoryById(Integer categoryId, Model model){
-        model.addAttribute("cheeses", cheeseDao.findAll());
+    @RequestMapping(value="category/{categoryId}")
+    public String getCategoryById(@PathVariable Integer categoryId, Model model){
+
+        Category selectedCategory = categoryDao.findOne(categoryId);
+        model.addAttribute("cheeses", cheeseDao.findByCategory(selectedCategory));
         model.addAttribute("title", "My Cheeses");
 
         return "cheese/index";
@@ -96,8 +103,7 @@ public class CheeseController {
 
 
     @RequestMapping(value = "edit/{cheeseId}", method = RequestMethod.POST)
-    public String processEditForm(@ModelAttribute @Valid Cheese cheese, Errors errors, String name, String description, int cheeseId, int categoryId, Model model){
-        cheese = cheeseDao.findOne(cheeseId);
+    public String processEditForm(@ModelAttribute @Valid Cheese cheese, Errors errors, String name, String description, int categoryId, Model model){
         if (errors.hasErrors()){
             model.addAttribute("categories", categoryDao.findAll());
             return "cheese/edit";

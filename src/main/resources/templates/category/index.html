@@ -11,7 +11,11 @@
 <table class="table">
 
     <tr th:each="category : ${categories}">
-        <td th:text="${category.name}"></td>
+        <td> <a th:href="@{'cheese/category/' + ${category.id}}" th:text="${category.name}"></a></td>
+<!--
+        <td><a th:href="@{'/cheese/edit/' + ${cheese.id}}">edit</a></td>
+-->
+
     </tr>
 
 </table>
